@@ -3,6 +3,7 @@ require 'omniauth/core'
 module OmniAuth
   module Strategies
     autoload :OAuth,              'omniauth/strategies/oauth'
+    autoload :OAuthWrap,          'omniauth/strategies/oauth_wrap'
     autoload :OAuth2,             'omniauth/strategies/oauth2'
     
     autoload :Twitter,            'omniauth/strategies/twitter'
