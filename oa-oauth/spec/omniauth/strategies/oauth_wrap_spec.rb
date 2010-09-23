@@ -33,7 +33,7 @@ describe "OmniAuth::Strategies::OAuthWrap" do
     it 'should redirect to authorize_url' do
       last_response.should be_redirect
       last_response.headers['Location'].should == 
-        'https://api.example.org/oauth/wrap.ext?wrap_client_id=abc&wrap_callback_url=http://example.org/auth/example.org/callback'
+        'https://api.example.org/oauth/wrap.ext?wrap_client_id=abc&wrap_callback=http://example.org/auth/example.org/callback'
     end
   
     # it 'should set appropriate session variables' do

@@ -19,7 +19,7 @@ module OmniAuth
     
       def request_phase
         r = Rack::Response.new
-        r.redirect "#{URI.join(@options[:site], @options[:verify_path])}?wrap_client_id=#{@options[:consumer_id]}&wrap_callback_url=#{callback_url}"
+        r.redirect "#{URI.join(@options[:site], @options[:verify_path])}?wrap_client_id=#{@options[:consumer_id]}&wrap_callback=#{callback_url}"
         r.finish
       end
     
