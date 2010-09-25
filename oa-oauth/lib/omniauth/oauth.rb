@@ -11,5 +11,7 @@ module OmniAuth
     autoload :Facebook,           'omniauth/strategies/facebook'
     autoload :GitHub,             'omniauth/strategies/github'
     autoload :ThirtySevenSignals, 'omniauth/strategies/thirty_seven_signals'
+    autoload :Myspace,            'omniauth/strategies/myspace'
+    autoload :Windows,            'omniauth/strategies/windows'
   end
 end
