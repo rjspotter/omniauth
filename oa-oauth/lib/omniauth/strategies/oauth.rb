@@ -27,8 +27,8 @@ module OmniAuth
         request['auth'] = self.auth_hash
         
         @app.call(self.env)
-      rescue ::OAuth::Unauthorized
-        fail!(:invalid_credentials)
+      # rescue ::OAuth::Unauthorized
+      #   fail!(:invalid_credentials)
       end
       
       def auth_hash
