@@ -1,5 +1,6 @@
 require 'omniauth/oauth'
 require 'multi_json'
+require 'chronic'
 
 module OmniAuth
   module Strategies
@@ -25,19 +26,23 @@ module OmniAuth
       end
       
       def request_phase(options = {})
-        options[:scope] ||= "email,offline_access"
+        options[:scope] ||= "email,offline_access,user_birthday"
         super(options)
       end
       
       def user_info
         {
-          'nickname' => user_data["link"].split('/').last,
+          'nickname'   => user_data["link"].split('/').last,
           'first_name' => user_data["first_name"],
-          'last_name' => user_data["last_name"],
-          'name' => "#{user_data['first_name']} #{user_data['last_name']}",
-          'urls' => {
+          'last_name'  => user_data["last_name"],
+          'gender'     => user_data['gender'].to_s.first.upcase,
+          'dob'        => Chronic.parse(user_data['birtday_date']).strftime("%Y-%m-%d"),
+          'timezone'   => user_data['timezone'],
+          'language'   => user_data['locale'],
+          'name'       => user_data['name'] || "#{user_data['first_name']} #{user_data['last_name']}",
+          'urls'       => {
             'Facebook' => user_data["link"],
-            'Website' => user_data["website"],
+            'Website'  => user_data["website"],
           }
         }
       end

@@ -13,7 +13,6 @@ module OmniAuth
     #
     # Options:
     #
-    # <tt>:scope</tt> :: Extended permissions such as <tt>email</tt> and <tt>offline_access</tt> (which are the defaults).
     class Myspace < OAuth
       def initialize(app, app_id, app_secret, options = {})
         options.merge!({
