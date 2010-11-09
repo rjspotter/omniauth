@@ -36,9 +36,11 @@ module OmniAuth
           'first_name' => user_data["first_name"],
           'last_name'  => user_data["last_name"],
           'gender'     => user_data['gender'].to_s.first.upcase,
-          'dob'        => Chronic.parse(user_data['birtday_date']).strftime("%Y-%m-%d"),
+#           'dob'        => user_data['birthday_date'],
+          'dob'        => user_data['birthday'] ? Chronic.parse(user_data['birthday']).strftime("%Y-%m-%d") : nil,
           'timezone'   => user_data['timezone'],
           'language'   => user_data['locale'],
+          'email'      => user_data['email'],
           'name'       => user_data['name'] || "#{user_data['first_name']} #{user_data['last_name']}",
           'urls'       => {
             'Facebook' => user_data["link"],
