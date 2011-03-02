@@ -4,25 +4,22 @@ require 'chronic'
 
 module OmniAuth
   module Strategies
-    #
     # Authenticate to Facebook utilizing OAuth 2.0 and retrieve
     # basic user information.
     #
-    # Usage:
-    #
-    #    use OmniAuth::Strategies::Facebook, 'app_id', 'app_secret'
-    #
-    # Options:
-    #
-    # <tt>:scope</tt> :: Extended permissions such as <tt>email</tt> and <tt>offline_access</tt> (which are the defaults).
+    # @example Basic Usage
+    #   use OmniAuth::Strategies::Facebook, 'client_id', 'client_secret'
     class Facebook < OAuth2
-      def initialize(app, app_id, app_secret, options = {})
-        options[:site] = 'https://graph.facebook.com/'
-        super(app, :facebook, app_id, app_secret, options)
+      # @param [Rack Application] app standard middleware application parameter
+      # @param [String] client_id the application id as [registered on Facebook](http://www.facebook.com/developers/)
+      # @param [String] client_secret the application secret as registered on Facebook
+      # @option options [String] :scope ('email,offline_access') comma-separated extended permissions such as `email` and `manage_pages`
+      def initialize(app, client_id = nil, client_secret = nil, options = {}, &block)
+        super(app, :facebook, client_id, client_secret, {:site => 'https://graph.facebook.com/'}, options, &block)
       end
       
       def user_data
-        @data ||= MultiJson.decode(@access_token.get('/me'))
+        @data ||= MultiJson.decode(@access_token.get('/me', {}, { "Accept-Language" => "en-us,en;"}))
       end
       
       def request_phase(options = {})

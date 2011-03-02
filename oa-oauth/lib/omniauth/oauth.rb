@@ -5,7 +5,7 @@ module OmniAuth
     autoload :OAuth,              'omniauth/strategies/oauth'
     autoload :OAuthWrap,          'omniauth/strategies/oauth_wrap'
     autoload :OAuth2,             'omniauth/strategies/oauth2'
-    
+
     autoload :Twitter,            'omniauth/strategies/twitter'
     autoload :LinkedIn,           'omniauth/strategies/linked_in'
     autoload :Facebook,           'omniauth/strategies/facebook'
@@ -13,6 +13,23 @@ module OmniAuth
     autoload :ThirtySevenSignals, 'omniauth/strategies/thirty_seven_signals'
     autoload :Myspace,            'omniauth/strategies/myspace'
     autoload :Windows,            'omniauth/strategies/windows'
-
+    autoload :Foursquare,         'omniauth/strategies/foursquare'
+    autoload :Gowalla,            'omniauth/strategies/gowalla'
+    autoload :Identica,           'omniauth/strategies/identica'
+    autoload :TripIt,             'omniauth/strategies/trip_it'
+    autoload :Dopplr,             'omniauth/strategies/dopplr'
+    autoload :Meetup,             'omniauth/strategies/meetup'
+    autoload :SoundCloud,         'omniauth/strategies/sound_cloud'
+    autoload :SmugMug,            'omniauth/strategies/smug_mug'
+    autoload :Goodreads,          'omniauth/strategies/goodreads'
+    autoload :Yahoo,              'omniauth/strategies/yahoo'
+    autoload :TypePad,            'omniauth/strategies/type_pad'
+ 
+    autoload :Netflix,            'omniauth/strategies/netflix'
+    autoload :Bitly,              'omniauth/strategies/bitly'
+    autoload :Vimeo,              'omniauth/strategies/vimeo'
+    autoload :YouTube,            'omniauth/strategies/you_tube'
+    autoload :Hyves,              'omniauth/strategies/hyves'
+    autoload :Miso,               'omniauth/strategies/miso'
   end
 end

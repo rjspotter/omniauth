@@ -23,7 +23,14 @@ coverage
 rdoc
 pkg
 tmp
+oa-live
 
 ## PROJECT::SPECIFIC
 *.gem
 .bundle
+.project
+.loadpath
+.yardoc
+doc
+
+Gemfile.lock

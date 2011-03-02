@@ -5,8 +5,9 @@ module OmniAuth
   
   module Test
     
-    # Support for testing OmniAuth strategies. Usage:
+    # Support for testing OmniAuth strategies.
     #
+    # @example Usage
     #   class MyStrategyTest < Test::Unit::TestCase
     #     include OmniAuth::Test::StrategyTestCase
     #     def strategy
@@ -20,12 +21,17 @@ module OmniAuth
     module StrategyTestCase
       
       def app
-        strategy = self.strategy
+        strat = self.strategy
+        resp = self.app_response
         Rack::Builder.new {
           use OmniAuth::Test::PhonySession
-          use *strategy
-          run lambda { |env| [200, {'Content-Type' => 'text/plain'}, [Rack::Request.new(env).params.key?('auth').to_s]] }
+          use *strat
+          run lambda {|env| [404, {'Content-Type' => 'text/plain'}, [resp || env.key?('omniauth.auth').to_s]] }
         }.to_app
+      end
+      
+      def app_response
+        nil
       end
 
       def session

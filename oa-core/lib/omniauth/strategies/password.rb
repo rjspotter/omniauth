@@ -6,23 +6,25 @@ module OmniAuth
     class Password
       include OmniAuth::Strategy
       
-      def initialize(app, options = {})
-        @options = options
-        super(app, :password)
+      def initialize(app, secret = 'changethisappsecret', options = {}, &block)
+        @secret = secret
+        super(app, :password, options, &block)
       end
+
+      attr_reader :secret
       
       def request_phase
         return fail!(:missing_information) unless request[:identifier] && request[:password]
         return fail!(:password_mismatch) if request[:password_confirmation] && request[:password_confirmation] != '' && request[:password] != request[:password_confirmation]
         env['REQUEST_METHOD'] = 'GET'
         env['PATH_INFO'] = request.path + '/callback'
-        request['auth'] = auth_hash(encrypt(request[:password]))
-        @app.call(env)
+        env['omniauth.auth'] = auth_hash(encrypt(request[:identifier], request[:password]))
+        call_app!
       end
       
       def auth_hash(crypted_password)
         OmniAuth::Utils.deep_merge(super(), {
-          'uid' => "#{request[:identifier]}::#{crypted_password}",
+          'uid' => crypted_password,
           'user_info' => {
             @options[:identifier_key] => request[:identifier]
           }
@@ -30,7 +32,7 @@ module OmniAuth
       end
       
       def callback_phase
-        @app.call(env)
+        call_app!
       end
       
       def encrypt(password)

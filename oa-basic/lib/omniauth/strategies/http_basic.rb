@@ -1,4 +1,4 @@
-require 'restclient'
+require 'rest-client'
 require 'omniauth/basic'
 
 module OmniAuth
@@ -6,7 +6,7 @@ module OmniAuth
     class HttpBasic
       include OmniAuth::Strategy
       
-      def initialize(app, name, endpoint, headers = {})
+      def initialize(app, name, endpoint = nil, headers = {}, &block)
         super
         @endpoint = endpoint
         @request_headers = headers
@@ -35,13 +35,13 @@ module OmniAuth
       
       def perform
         @response = perform_authentication(endpoint)
-        request.POST['auth'] = auth_hash
+        @env['omniauth.auth'] = auth_hash
         @env['REQUEST_METHOD'] = 'GET'
         @env['PATH_INFO'] = "#{OmniAuth.config.path_prefix}/#{name}/callback"
-
-        @app.call(@env)
-      rescue RestClient::Request::Unauthorized
-        fail!(:invalid_credentials)
+        
+        call_app!
+      rescue RestClient::Request::Unauthorized => e
+        fail!(:invalid_credentials, e)
       end
       
       def perform_authentication(uri, headers = request_headers)

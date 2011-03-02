@@ -1,14 +1,17 @@
 require 'rack/openid'
+require 'omniauth/openid/gapps'
 require 'omniauth/openid'
 
 module OmniAuth
   module Strategies
+    # OmniAuth strategy for connecting via OpenID. This allows for connection
+    # to a wide variety of sites, some of which are listed [on the OpenID website](http://openid.net/get-an-openid/).
     class OpenID
       include OmniAuth::Strategy
       
-      # Should be 'openid_url'
-      # @see http://github.com/intridea/omniauth/issues/issue/13
-      IDENTIFIER_URL_PARAMETER = 'identifier'
+      attr_accessor :options
+      
+      IDENTIFIER_URL_PARAMETER = 'openid_url'
       
       AX = {
         :email => 'http://axschema.org/contact/email',
@@ -22,31 +25,38 @@ module OmniAuth
         :image => 'http://axschema.org/media/image/aspect11'
       }
       
-      def initialize(app, store = nil, options = {})
-        super(app, options[:name] || :open_id)
+      # Initialize the strategy as a Rack Middleware.
+      #
+      # @param app [Rack Application] Standard Rack middleware application argument.
+      # @param store [OpenID Store] The [OpenID Store](http://github.com/openid/ruby-openid/tree/master/lib/openid/store/)
+      #   you wish to use. Defaults to OpenID::MemoryStore.
+      # @option options [Array] :required The identity fields that are required for the OpenID 
+      #   request. May be an ActiveExchange schema URL or an sreg identifier.
+      # @option options [Array] :optional The optional attributes for the OpenID request. May
+      #   be ActiveExchange or sreg.
+      # @option options [Symbol, :open_id] :name The URL segment name for this provider.
+      def initialize(app, store = nil, options = {}, &block)
+        super(app, (options[:name] || :open_id), &block)
         @options = options
-        @options[:required] ||= [AX[:email], AX[:name], 'email', 'fullname']
-        @options[:optional] ||= [AX[:first_name], AX[:last_name], AX[:nickname], AX[:city], AX[:state], AX[:website], AX[:image], 'postcode', 'nickname']
+        @options[:required] ||= [AX[:email], AX[:name], AX[:first_name], AX[:last_name], 'email', 'fullname']
+        @options[:optional] ||= [AX[:nickname], AX[:city], AX[:state], AX[:website], AX[:image], 'postcode', 'nickname']
         @store = store
       end
+      
+      protected
       
       def dummy_app
         lambda{|env| [401, {"WWW-Authenticate" => Rack::OpenID.build_header(
           :identifier => identifier,
           :return_to => callback_url,
           :required => @options[:required],
-          :optional => @options[:optional]
+          :optional => @options[:optional],
+          :method => 'post'
         )}, []]}
       end
       
-      def callback_url
-        uri = URI.parse(request.url)
-        uri.path += '/callback'
-        uri.to_s
-      end
-      
       def identifier
-        request[IDENTIFIER_URL_PARAMETER]
+        options[:identifier] || request[IDENTIFIER_URL_PARAMETER]
       end
       
       def request_phase
@@ -72,23 +82,20 @@ module OmniAuth
       end
       
       def callback_phase
-        env['REQUEST_METHOD'] = 'GET'
-        
         openid = Rack::OpenID.new(lambda{|env| [200,{},[]]}, @store)
         openid.call(env)
-        resp = env.delete('rack.openid.response')
-        if resp && resp.status == :success
-          request['auth'] = auth_hash(resp)
-          @app.call(env)
+        @openid_response = env.delete('rack.openid.response')
+        if @openid_response && @openid_response.status == :success
+          super
         else
           fail!(:invalid_credentials)
         end
       end
       
-      def auth_hash(response)
+      def auth_hash
         OmniAuth::Utils.deep_merge(super(), {
-          'uid' => response.display_identifier,
-          'user_info' => user_info(response)
+          'uid' => @openid_response.display_identifier,
+          'user_info' => user_info(@openid_response)
         })
       end
       
@@ -111,11 +118,13 @@ module OmniAuth
         ax = ::OpenID::AX::FetchResponse.from_success_response(response)
         return {} unless ax
         {
-          'email' => ax[AX[:email]],
-          'name' => ax[AX[:name]],
-          'location' => ("#{ax[AX[:city]]}, #{ax[AX[:state]]}" if Array(ax[AX[:city]]).any? && Array(ax[AX[:state]]).any?),
-          'nickname' => ax[AX[:nickname]],
-          'urls' => ({'Website' => Array(ax[AX[:website]]).first} if Array(ax[AX[:website]]).any?)
+          'email' => ax.get_single(AX[:email]),
+          'first_name' => ax.get_single(AX[:first_name]),
+          'last_name' => ax.get_single(AX[:last_name]),
+          'name' => (ax.get_single(AX[:name]) || [ax.get_single(AX[:first_name]), ax.get_single(AX[:last_name])].join(' ')).strip,
+          'location' => ("#{ax.get_single(AX[:city])}, #{ax.get_single(AX[:state])}" if Array(ax.get_single(AX[:city])).any? && Array(ax.get_single(AX[:state])).any?),
+          'nickname' => ax.get_single(AX[:nickname]),
+          'urls' => ({'Website' => Array(ax.get_single(AX[:website])).first} if Array(ax.get_single(AX[:website])).any?)
         }.inject({}){|h,(k,v)| h[k] = Array(v).first; h}.reject{|k,v| v.nil? || v == ''}
       end
     end

@@ -1,10 +1,18 @@
 require 'omniauth/core'
 
 module OmniAuth
-  class Builder < Rack::Builder
+  class Builder < ::Rack::Builder 
     def initialize(app, &block)
       @app = app
       super(&block)
+    end
+    
+    def on_failure(&block)
+      OmniAuth.config.on_failure = block
+    end
+    
+    def configure(&block)
+      OmniAuth.configure(&block)
     end
     
     def provider(klass, *args, &block)

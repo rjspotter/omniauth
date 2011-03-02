@@ -1,15 +1,25 @@
 require 'rubygems'
 require 'rake'
-require 'term/ansicolor'
 
-include Term::ANSIColor
+begin
+  require 'term/ansicolor'
+  include Term::ANSIColor
+rescue LoadError
+  def cyan; '' end
+  def blue; '' end
+  def clear; '' end
+  def green; '' end
+  def red; '' end
+end
 
-OMNIAUTH_GEMS = %w(oa-basic oa-core oa-oauth oa-openid oa-corporate omniauth)
+OMNIAUTH_GEMS = %w(oa-basic oa-core oa-oauth oa-openid oa-enterprise oa-more omniauth)
 
 def each_gem(action, &block)
   OMNIAUTH_GEMS.each_with_index do |dir, i|
     print blue, "\n\n== ", cyan, dir, blue, " ", action, clear, "\n\n"
-    Dir.chdir(dir, &block)
+    Dir.chdir(dir) do
+      block.call(dir)
+    end
   end
 end
 
@@ -46,8 +56,20 @@ end
 
 desc 'Run specs for all of the gems.'
 task :spec do
-  each_gem('specs are running...') do
-    system('rake spec')
+  error_gems = []
+  each_gem('specs are running...') do |jem|
+    ENV['RSPEC_FORMAT'] = 'progress'
+    unless system('rake spec')
+      error_gems << jem
+    end
+  end
+  
+  puts
+  if error_gems.any?
+    puts "#{red}#{error_gems.size} gems with failing specs: #{error_gems.join(', ')}#{clear}"
+    exit(1)
+  else
+    puts "#{green}All gems passed specs.#{clear}"
   end
 end
 
@@ -57,6 +79,15 @@ namespace :dependencies do
     each_gem('is installing dependencies...') do
       system('bundle install')
     end
+  end
+end
+
+task :release => ['release:tag', 'gems:publish', 'doc:pages:publish']
+
+namespace :release do
+  task :tag do
+    system("git tag v#{version}")
+    system('git push origin --tags')
   end
 end
 
@@ -70,9 +101,9 @@ namespace :gems do
   end
   
   desc 'Push all gems to Gemcutter'
-  task :release do
+  task :push do
     each_gem('is releasing to Gemcutter...') do
-      system('rake gemcutter')
+      system('rake gem:publish')
     end
   end
 
@@ -112,10 +143,43 @@ namespace :version do
   end
   
   namespace :bump do
+    desc "Increment the major version."
     task(:major){ bump_version(0) }
+    desc "Increment the minor version."
     task(:minor){ bump_version(1) }
+    desc "Increment the patch version."
     task(:patch){ bump_version(2) }
   end
 end
 
 task :default => :spec
+
+begin
+  YARD_OPTS = ['-m', 'markdown', '-M', 'maruku']
+  require 'yard'
+  YARD::Rake::YardocTask.new(:doc) do |t|
+    t.files   = OMNIAUTH_GEMS.inject([]){|a,g| a = a + ["#{g}/lib/**/*.rb"]; a} + ['README.markdown']
+    t.options = YARD_OPTS
+  end
+  
+  namespace :doc do
+    YARD::Rake::YardocTask.new(:pages) do |t|
+      t.files   = OMNIAUTH_GEMS.inject([]){|a,g| a = a + ["#{g}/lib/**/*.rb"]; a} + ['README.markdown']
+      t.options = YARD_OPTS + ['-o', '../omniauth.doc']
+    end
+    
+    namespace :pages do
+      desc 'Generate and publish YARD docs to GitHub pages.'
+      task :publish => ['doc:pages'] do
+        Dir.chdir(File.dirname(__FILE__) + '/../omniauth.doc') do
+          system("git add .")
+          system("git add -u")
+          system("git commit -m 'Generating docs for version #{version}.'")
+          system("git push origin gh-pages")
+        end
+      end
+    end
+  end
+rescue LoadError
+  puts "You need to install YARD."
+end
