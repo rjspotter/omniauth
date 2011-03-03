@@ -12,7 +12,7 @@ describe "OmniAuth::Strategies::OAuthWrap" do
           :access_token_path => '/oauth/access_token.ext'
         }
       end
-      run lambda { |env| [200, {'Content-Type' => 'text/plain'}, [Rack::Request.new(env).params.key?('auth').to_s]] }
+      run lambda { |env| [404, {'Content-Type' => 'text/plain'}, [env.key?('omniauth.auth').to_s]] }
     }.to_app
   end
 

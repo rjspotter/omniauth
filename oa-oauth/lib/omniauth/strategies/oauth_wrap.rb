@@ -13,20 +13,22 @@ module OmniAuth
       # :access_token_path => 'the access token path'
       #
       def initialize(app, name, consumer_id, shared_secret, options = {})
-        @options = options.merge({:consumer_id => consumer_id, :shared_secret => shared_secret, :name => name})
+        self.consumer_id, self.consumer_secret, self.consumer_options = consumer_id, shared_secret, options
         super
       end
+
+      attr_accessor :consumer_id, :consumer_secret, :consumer_options
     
       def request_phase
         r = Rack::Response.new
-        r.redirect "#{URI.join(@options[:site], @options[:verify_path])}?wrap_client_id=#{@options[:consumer_id]}&wrap_callback=#{callback_url}"
+        r.redirect "#{URI.join(consumer_options[:site], consumer_options[:verify_path])}?wrap_client_id=#{consumer_id}&wrap_callback=#{callback_url}"
         r.finish
       end
     
       def callback_phase
-        Rack::Client.new(@options[:site]).post(@options[:access_token_path], {
-                            'wrap_client_id'         => @options[:consumer_id],
-                            'wrap_client_secret'     => @options[:shared_secret],
+        Rack::Client.new(consumer_options[:site]).post(consumer_options[:access_token_path], {
+                            'wrap_client_id'         => consumer_id,
+                            'wrap_client_secret'     => consumer_secret,
                             'wrap_verification_code' => http_parameters['wrap_verification_code'],
                             'wrap_callback'          => callback_url
                           }).body.each do |res|

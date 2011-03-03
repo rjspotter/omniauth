@@ -6,13 +6,14 @@ module OmniAuth
     autoload :OAuthWrap,          'omniauth/strategies/oauth_wrap'
     autoload :OAuth2,             'omniauth/strategies/oauth2'
 
+    autoload :Myspace,            'omniauth/strategies/myspace'
+    autoload :Windows,            'omniauth/strategies/windows'
+
     autoload :Twitter,            'omniauth/strategies/twitter'
     autoload :LinkedIn,           'omniauth/strategies/linked_in'
     autoload :Facebook,           'omniauth/strategies/facebook'
     autoload :GitHub,             'omniauth/strategies/github'
     autoload :ThirtySevenSignals, 'omniauth/strategies/thirty_seven_signals'
-    autoload :Myspace,            'omniauth/strategies/myspace'
-    autoload :Windows,            'omniauth/strategies/windows'
     autoload :Foursquare,         'omniauth/strategies/foursquare'
     autoload :Gowalla,            'omniauth/strategies/gowalla'
     autoload :Identica,           'omniauth/strategies/identica'
@@ -24,7 +25,6 @@ module OmniAuth
     autoload :Goodreads,          'omniauth/strategies/goodreads'
     autoload :Yahoo,              'omniauth/strategies/yahoo'
     autoload :TypePad,            'omniauth/strategies/type_pad'
- 
     autoload :Netflix,            'omniauth/strategies/netflix'
     autoload :Bitly,              'omniauth/strategies/bitly'
     autoload :Vimeo,              'omniauth/strategies/vimeo'
