@@ -10,14 +10,14 @@ module OmniAuth
       # @param [Rack Application] app standard middleware application argument
       # @param [String] client_id the application ID for your client
       # @param [String] client_secret the application secret
-      def initialize(app, client_id = nil, client_secret = nil, options = {}, &block)
+      def initialize(app, consumer_store = nil, options = {}, &block)
         client_options = {
           :site => 'https://github.com/',
           :authorize_path => '/login/oauth/authorize',
           :access_token_path => '/login/oauth/access_token'
         }
         
-        super(app, :github, client_id, client_secret, client_options, options, &block)
+        super(app, :github, consumer_store, client_options, options, &block)
       end
       
       protected

@@ -56,14 +56,14 @@ shared_examples_for "an oauth2 strategy" do
     lambda{ strategy_class.new(lambda{|env| [200, {}, ['Hello World']]}, @store) }.should_not raise_error
   end
   
-  # it 'should be initializable with a block' do
-  #   lambda{ strategy_class.new(lambda{|env| [200, {}, ['Hello World']]}){|s| s.client_store = @store} }.should_not raise_error
-  # end
+  it 'should be initializable with a block' do
+    lambda{ strategy_class.new(lambda{|env| [200, {}, ['Hello World']]}){|s| s.consumer_store = @store} }.should_not raise_error
+  end
 
-  # it 'should handle the setting of client options' do
-  #   s = strategy_class.new(lambda{|env| [200, {}, ['Hello World']]}, @store, :client_options => {:abc => 'def'})
-  #   s.client.options[:abc].should == 'def'
-  # end
+  it 'should handle the setting of client options' do
+    s = strategy_class.new(lambda{|env| [200, {}, ['Hello World']]}, @store, :client_options => {:abc => 'def'})
+    s.client_options[:abc].should == 'def'
+  end
 end
 
 shared_examples_for "storage not implemented" do
