@@ -12,8 +12,8 @@ module OmniAuth
     #    use OmniAuth::Strategies::Miso, 'consumerkey', 'consumersecret'
     #
     class Miso < OmniAuth::Strategies::OAuth
-      def initialize(app, consumer_key = nil, consumer_secret = nil, options = {}, &block)
-        super(app, :miso, consumer_key, consumer_secret, {:site => 'https://gomiso.com'}, options)
+      def initialize(app, consumer_store = nil, options = {}, &block)
+        super(app, :miso, consumer_store, {:site => 'https://gomiso.com'}, options)
       end
       
       def auth_hash

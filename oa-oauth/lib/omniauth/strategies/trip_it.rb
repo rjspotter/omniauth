@@ -10,8 +10,8 @@ module OmniAuth
     #    use OmniAuth::Strategies::TripIt, 'consumerkey', 'consumersecret'
     #
     class TripIt < OmniAuth::Strategies::OAuth
-      def initialize(app, consumer_key = nil, consumer_secret = nil, options = {}, &block)
-        super(app, :tripit, consumer_key, consumer_secret,
+      def initialize(app, consumer_store = nil, options = {}, &block)
+        super(app, :tripit, consumer_store,
                 {:site => 'https://api.tripit.com',
                 :request_token_path => "/oauth/request_token",
                 :access_token_path  => "/oauth/access_token",

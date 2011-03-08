@@ -11,14 +11,14 @@ module OmniAuth
     #    use OmniAuth::Strategies::Vimeo, 'consumerkey', 'consumersecret'
     #
     class Vimeo < OmniAuth::Strategies::OAuth
-      def initialize(app, consumer_key = nil, consumer_secret = nil, options = {}, &block)
+      def initialize(app, consumer_store = nil, options = {}, &block)
         opts = {
           :site               => 'http://vimeo.com',
           :request_token_path => '/oauth/request_token',
           :access_token_path  => '/oauth/access_token',
           :authorize_path     => '/oauth/authorize'
         }
-        super(app, :vimeo, consumer_key, consumer_secret, opts, options, &block)
+        super(app, :vimeo, consumer_store, opts, options, &block)
       end
 
       def auth_hash

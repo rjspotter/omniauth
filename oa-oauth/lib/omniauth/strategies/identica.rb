@@ -12,8 +12,8 @@ module OmniAuth
     #    use OmniAuth::Strategies::Identica, 'consumerkey', 'consumersecret'
     #
     class Identica < OmniAuth::Strategies::OAuth
-      def initialize(app, consumer_key = nil, consumer_secret = nil, options = {}, &block)
-        super(app, :identica, consumer_key, consumer_secret,
+      def initialize(app, consumer_store = nil, options = {}, &block)
+        super(app, :identica, consumer_store,
                 {:site => 'http://identi.ca',
                 :request_token_path => "/api/oauth/request_token",
                 :access_token_path  => "/api/oauth/access_token",

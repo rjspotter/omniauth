@@ -12,7 +12,7 @@ module OmniAuth
     #    use OmniAuth::Strategies::Yahoo, 'consumerkey', 'consumersecret'
     #
     class Yahoo < OmniAuth::Strategies::OAuth
-      def initialize(app, consumer_key = nil, consumer_secret = nil, options = {}, &block)
+      def initialize(app, consumer_store = nil, options = {}, &block)
         client_options = {
           :site => 'https://api.login.yahoo.com',
           :request_token_path => '/oauth/v2/get_request_token',
@@ -20,7 +20,7 @@ module OmniAuth
           :authorize_path => "/oauth/v2/request_auth"
         }
 
-        super(app, :yahoo, consumer_key, consumer_secret, client_options, options)
+        super(app, :yahoo, consumer_store, client_options, options)
       end
       
       def auth_hash

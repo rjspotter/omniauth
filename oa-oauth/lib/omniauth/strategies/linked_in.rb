@@ -4,19 +4,15 @@ require 'omniauth/oauth'
 module OmniAuth
   module Strategies
     class LinkedIn < OmniAuth::Strategies::OAuth
-      def initialize(app, consumer_key = nil, consumer_secret = nil, options = {}, &block)
+      def initialize(app, consumer_store = nil, options = {}, &block)
         client_options = {
           :site => 'https://api.linkedin.com',
           :request_token_path => '/uas/oauth/requestToken',
           :access_token_path => '/uas/oauth/accessToken',
-          :authorize_path => '/uas/oauth/authorize',
+          :authorize_path => options[:sign_in] == false ? '/uas/oauth/authorize' : '/uas/oauth/authenticate',
           :scheme => :header
         }
-
-        client_options[:authorize_path] = '/uas/oauth/authenticate' unless options[:sign_in] == false
-
-        '/uas/oauth/authorize'
-        super(app, :linked_in, consumer_key, consumer_secret, client_options, options, &block)
+        super(app, :linked_in, consumer_store, client_options, options, &block)
       end
       
       def auth_hash

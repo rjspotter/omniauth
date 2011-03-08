@@ -5,7 +5,7 @@ require 'multi_json'
 module OmniAuth
   module Strategies
     class Hyves < OmniAuth::Strategies::OAuth
-      def initialize(app, consumer_key = nil, consumer_secret = nil, options = {}, &block)
+      def initialize(app, consumer_store = nil, options = {}, &block)
         client_options = {
           :request_token_path => request_token_path,
           :authorize_path => "http://www.hyves.nl/api/authorize",
@@ -13,7 +13,7 @@ module OmniAuth
           :http_method => :get,
           :scheme => :header
         }
-        super(app, :hyves, consumer_key, consumer_secret, client_options, options, &block)
+        super(app, :hyves, consumer_store, client_options, options, &block)
       end
       
       def auth_hash

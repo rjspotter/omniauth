@@ -7,7 +7,22 @@ describe OmniAuth::Strategies::Myspace do
   end
   
   it 'should initialize with just consumer key and secret' do
-    lambda{OmniAuth::Strategies::Myspace.new({},'abc','def')}.should_not raise_error
+    @store = double()
+    @store.stub(:key) do |arg|
+      if arg == :thingone
+        "abc"
+      else
+        "someotherthingy"
+      end
+    end
+    @store.stub(:secret) do |arg|
+      if arg == :thingone
+        "def"
+      else
+        "someotherthingy"
+      end
+    end
+    lambda{OmniAuth::Strategies::Myspace.new({},@store)}.should_not raise_error
   end
   
 end

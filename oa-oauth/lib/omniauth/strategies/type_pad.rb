@@ -14,7 +14,7 @@ module OmniAuth
     #    application_id is required.
     #
     class TypePad < OmniAuth::Strategies::OAuth
-      def initialize(app, consumer_key = nil, consumer_secret = nil, options = {}, &block)
+      def initialize(app, consumer_store = nil, options = {}, &block)
 
         # TypePad uses the application ID for one of the OAuth paths.
         app_id = options[:application_id]
@@ -31,7 +31,7 @@ module OmniAuth
 
         options.merge! :scheme => :query_string, :http_method => :get
 
-        super(app, :type_pad, consumer_key, consumer_secret, client_options, options)
+        super(app, :type_pad, consumer_store, client_options, options)
       end
       
       def auth_hash

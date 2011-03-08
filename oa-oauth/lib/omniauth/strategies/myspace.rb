@@ -14,7 +14,7 @@ module OmniAuth
     # Options:
     #
     class Myspace < OAuth
-      def initialize(app, app_id, app_secret, options = {})
+      def initialize(app, consumer_store, options = {})
         options.merge!({
           :site => 'http://api.myspace.com',
           :http_method => :get,
@@ -24,7 +24,7 @@ module OmniAuth
           :authorize_path => '/authorize',
           :exclude_body_hash => true
         })
-        super(app, :myspace, app_id, app_secret, options)
+        super(app, :myspace, consumer_store, options)
       end
       
       def user_data

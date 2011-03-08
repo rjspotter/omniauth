@@ -12,7 +12,7 @@ module OmniAuth
     #    use OmniAuth::Strategies::Google, 'consumerkey', 'consumersecret'
     #
     class Google < OmniAuth::Strategies::OAuth
-      def initialize(app, consumer_key = nil, consumer_secret = nil, options = {}, &block)
+      def initialize(app, consumer_store = nil, options = {}, &block)
         client_options = {
           :site => 'https://www.google.com',
           :request_token_path => '/accounts/OAuthGetRequestToken',
@@ -24,7 +24,7 @@ module OmniAuth
         options[:scope] ||= google_contacts_auth
         options[:scope] << " #{google_contacts_auth}" unless options[:scope].include?(google_contacts_auth)
         
-        super(app, :google, consumer_key, consumer_secret, client_options, options)
+        super(app, :google, consumer_store, client_options, options)
       end
       
       def auth_hash
@@ -62,7 +62,7 @@ module OmniAuth
 
       # Monkeypatch OmniAuth to pass the scope in the consumer.get_request_token call
       def request_phase
-        request_token = consumer.get_request_token({:oauth_callback => callback_url}, {:scope => options[:scope]})
+        request_token = consumer(consumer_id).get_request_token({:oauth_callback => callback_url}, {:scope => options[:scope]})
 
         (session['oauth']||={})[name.to_s] = {'callback_confirmed' => request_token.callback_confirmed?, 'request_token' => request_token.token, 'request_secret' => request_token.secret}
         r = Rack::Response.new
