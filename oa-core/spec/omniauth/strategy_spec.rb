@@ -14,7 +14,7 @@ class ExampleStrategy
   end
 end
 
-def make_env(path = '/auth/test', props = {})
+def make_env(path = '/auth/thisisan-exam-ple0-uuid-fortesting00/test', props = {})
   {
     'REQUEST_METHOD' => 'GET',
     'PATH_INFO' => path,
@@ -41,12 +41,12 @@ describe OmniAuth::Strategy do
     
     context 'omniauth.origin' do
       it 'should be set on the request phase' do
-        lambda{ strategy.call(make_env('/auth/test', 'HTTP_REFERER' => 'http://example.com/origin')) }.should raise_error("Request Phase")
+        lambda{ strategy.call(make_env('/auth/thisisan-exam-ple0-uuid-fortesting00/test', 'HTTP_REFERER' => 'http://example.com/origin')) }.should raise_error("Request Phase")
         strategy.last_env['rack.session']['omniauth.origin'].should == 'http://example.com/origin'
       end
 
       it 'should be turned into an env variable on the callback phase' do
-        lambda{ strategy.call(make_env('/auth/test/callback', 'rack.session' => {'omniauth.origin' => 'http://example.com/origin'})) }.should raise_error("Callback Phase")
+        lambda{ strategy.call(make_env('/auth/thisisan-exam-ple0-uuid-fortesting00/test/callback', 'rack.session' => {'omniauth.origin' => 'http://example.com/origin'})) }.should raise_error("Callback Phase")
         strategy.last_env['omniauth.origin'].should == 'http://example.com/origin'
       end
     end
@@ -57,15 +57,15 @@ describe OmniAuth::Strategy do
       end
       
       it 'should use the default callback path' do
-        lambda{ strategy.call(make_env('/auth/test/callback')) }.should raise_error("Callback Phase")
+        lambda{ strategy.call(make_env('/auth/thisisan-exam-ple0-uuid-fortesting00/test/callback')) }.should raise_error("Callback Phase")
       end
 
       it 'should strip trailing spaces on request' do
-        lambda{ strategy.call(make_env('/auth/test/')) }.should raise_error("Request Phase")        
+        lambda{ strategy.call(make_env('/auth/thisisan-exam-ple0-uuid-fortesting00/test/')) }.should raise_error("Request Phase")        
       end
 
       it 'should strip trailing spaces on callback' do
-        lambda{ strategy.call(make_env('/auth/test/callback/')) }.should raise_error("Callback Phase")
+        lambda{ strategy.call(make_env('/auth/thisisan-exam-ple0-uuid-fortesting00/test/callback/')) }.should raise_error("Callback Phase")
       end
 
       context 'callback_url' do
@@ -74,15 +74,15 @@ describe OmniAuth::Strategy do
 
           lambda{ strategy.call(make_env) }.should raise_error("Request Phase")
 
-          strategy.callback_url.should == 'http://example.com/auth/test/callback'
+          strategy.callback_url.should == 'http://example.com/auth/thisisan-exam-ple0-uuid-fortesting00/test/callback'
         end
 
         it 'preserves the query parameters' do
           strategy.stub(:full_host).and_return('http://example.com')
           begin
-            strategy.call(make_env('/auth/test', 'QUERY_STRING' => 'id=5'))
+            strategy.call(make_env('/auth/thisisan-exam-ple0-uuid-fortesting00/test', 'QUERY_STRING' => 'id=5'))
           rescue RuntimeError; end
-          strategy.callback_url.should == 'http://example.com/auth/test/callback?id=5'
+          strategy.callback_url.should == 'http://example.com/auth/thisisan-exam-ple0-uuid-fortesting00/test/callback?id=5'
         end
       end
     end
@@ -97,7 +97,7 @@ describe OmniAuth::Strategy do
       end
 
       it 'should call through to the app instead if a non-404 response is received' do
-        lambda{ subject.call(make_env('/auth/test', 'test.status' => 200)) }.should_not raise_error
+        lambda{ subject.call(make_env('/auth/thisisan-exam-ple0-uuid-fortesting00/test', 'test.status' => 200)) }.should_not raise_error
         subject.response.body.should == ['Whatev']
       end
     end
@@ -127,7 +127,7 @@ describe OmniAuth::Strategy do
           @options = {:callback_path => '/radical'}
           strategy.stub(:full_host).and_return('http://example.com')
           begin
-            strategy.call(make_env('/auth/test', 'QUERY_STRING' => 'id=5'))
+            strategy.call(make_env('/auth/thisisan-exam-ple0-uuid-fortesting00/test', 'QUERY_STRING' => 'id=5'))
           rescue RuntimeError; end
           strategy.callback_url.should == 'http://example.com/radical?id=5'
         end
@@ -140,28 +140,28 @@ describe OmniAuth::Strategy do
       end
       
       it 'should use a custom prefix for request' do
-        lambda{ strategy.call(make_env('/wowzers/test')) }.should raise_error("Request Phase")
+        lambda{ strategy.call(make_env('/wowzers/thisisan-exam-ple0-uuid-fortesting00/test')) }.should raise_error("Request Phase")
       end
       
       it 'should use a custom prefix for callback' do
-        lambda{ strategy.call(make_env('/wowzers/test/callback')) }.should raise_error("Callback Phase")
+        lambda{ strategy.call(make_env('/wowzers/thisisan-exam-ple0-uuid-fortesting00/test/callback')) }.should raise_error("Callback Phase")
       end
 
       context 'callback_url' do
         it 'uses a custom prefix' do
           strategy.should_receive(:full_host).and_return('http://example.com')
 
-          lambda{ strategy.call(make_env('/wowzers/test')) }.should raise_error("Request Phase")
+          lambda{ strategy.call(make_env('/wowzers/thisisan-exam-ple0-uuid-fortesting00/test')) }.should raise_error("Request Phase")
 
-          strategy.callback_url.should == 'http://example.com/wowzers/test/callback'
+          strategy.callback_url.should == 'http://example.com/wowzers/thisisan-exam-ple0-uuid-fortesting00/test/callback'
         end
 
         it 'preserves the query parameters' do
           strategy.stub(:full_host).and_return('http://example.com')
           begin
-            strategy.call(make_env('/auth/test', 'QUERY_STRING' => 'id=5'))
+            strategy.call(make_env('/auth/thisisan-exam-ple0-uuid-fortesting00/test', 'QUERY_STRING' => 'id=5'))
           rescue RuntimeError; end
-          strategy.callback_url.should == 'http://example.com/wowzers/test/callback?id=5'
+          strategy.callback_url.should == 'http://example.com/wowzers/thisisan-exam-ple0-uuid-fortesting00/test/callback?id=5'
         end
       end
     end
@@ -176,7 +176,7 @@ describe OmniAuth::Strategy do
       end
       
       it 'should allow a request method of the correct type' do
-        lambda{ strategy.call(make_env('/auth/test', 'REQUEST_METHOD' => 'POST'))}.should raise_error("Request Phase")
+        lambda{ strategy.call(make_env('/auth/thisisan-exam-ple0-uuid-fortesting00/test', 'REQUEST_METHOD' => 'POST'))}.should raise_error("Request Phase")
       end
       
       after do
@@ -192,7 +192,7 @@ describe OmniAuth::Strategy do
       it 'should short circuit the request phase entirely' do
         response = strategy.call(make_env)
         response[0].should == 302
-        response[1]['Location'].should == '/auth/test/callback'
+        response[1]['Location'].should == '/auth/thisisan-exam-ple0-uuid-fortesting00/test/callback'
       end
 
       it 'should not short circuit requests outside of authentication' do
@@ -200,7 +200,7 @@ describe OmniAuth::Strategy do
       end
 
       it 'should respond with the default hash if none is set' do
-        strategy.call make_env('/auth/test/callback')
+        strategy.call make_env('/auth/thisisan-exam-ple0-uuid-fortesting00/test/callback')
         strategy.env['omniauth.auth']['uid'].should == '1234'
       end
 
@@ -209,14 +209,14 @@ describe OmniAuth::Strategy do
           'uid' => 'abc'
         }
 
-        strategy.call make_env('/auth/test/callback')
+        strategy.call make_env('/auth/thisisan-exam-ple0-uuid-fortesting00/test/callback')
         strategy.env['omniauth.auth']['uid'].should == 'abc'
       end
 
       it 'should simulate login failure if mocked data is set as a symbol' do
         OmniAuth.config.mock_auth[:test] = :invalid_credentials
 
-        strategy.call make_env('/auth/test/callback')
+        strategy.call make_env('/auth/thisisan-exam-ple0-uuid-fortesting00/test/callback')
         strategy.env['omniauth.error.type'].should == :invalid_credentials
       end
     end
@@ -229,7 +229,7 @@ describe OmniAuth::Strategy do
 
       it 'should run the proc with the env when it is a proc' do
         OmniAuth.config.full_host = Proc.new{|env| env['HOST']}
-        strategy.call(make_env('/auth/test', 'HOST' => 'my.host.net'))
+        strategy.call(make_env('/auth/thisisan-exam-ple0-uuid-fortesting00/test', 'HOST' => 'my.host.net'))
         strategy.full_host.should == 'my.host.net'
       end
     end
@@ -240,8 +240,8 @@ describe OmniAuth::Strategy do
       let(:strategy){ ExampleStrategy.new(app, 'test', :setup => true) }      
       let(:app){lambda{|env| env['omniauth.strategy'].options[:awesome] = 'sauce'; [404, {}, 'Awesome']}}
 
-      it 'should call through to /auth/:provider/setup' do
-        strategy.call(make_env('/auth/test'))
+      it 'should call through to /auth/thisisan-exam-ple0-uuid-fortesting00/:provider/setup' do
+        strategy.call(make_env('/auth/thisisan-exam-ple0-uuid-fortesting00/test'))
         strategy.options[:awesome].should == 'sauce'
       end
     end
@@ -256,7 +256,7 @@ describe OmniAuth::Strategy do
       let(:strategy){ ExampleStrategy.new(app, 'test', :setup => setup_proc) }
       
       it 'should call the rack app' do
-        strategy.call(make_env('/auth/test'))
+        strategy.call(make_env('/auth/thisisan-exam-ple0-uuid-fortesting00/test'))
         strategy.options[:awesome].should == 'sauce'  
       end
     end

@@ -31,14 +31,14 @@ module OmniAuth
       setup_phase            
       return mock_call!(env) if OmniAuth.config.test_mode
       
-      if current_path == request_path && OmniAuth.config.allowed_request_methods.include?(request.request_method.downcase.to_sym)
+      if request_path =~ current_path && OmniAuth.config.allowed_request_methods.include?(request.request_method.downcase.to_sym)
         if response = call_through_to_app
           response
         else
           env['rack.session']['omniauth.origin'] = env['HTTP_REFERER']
           request_phase
         end
-      elsif current_path == callback_path
+      elsif callback_path =~ current_path
         env['omniauth.origin'] = session.delete('omniauth.origin')
         env['omniauth.origin'] = nil if env['omniauth.origin'] == ''
 
@@ -53,14 +53,14 @@ module OmniAuth
     end
 
     def mock_call!(env)
-      if current_path == request_path 
+      if request_path =~ current_path 
         if response = call_through_to_app
           response
         else
           env['rack.session']['omniauth.origin'] = env['HTTP_REFERER']
-          redirect(callback_path)
+          redirect("#{path_prefix}/#{consumer_id}/#{name}/callback")
         end
-      elsif current_path == callback_path
+      elsif callback_path =~ current_path
         mocked_auth = OmniAuth.mock_auth_for(name.to_sym)
         if mocked_auth.is_a?(Symbol)
           fail!(mocked_auth)
@@ -94,17 +94,29 @@ module OmniAuth
     def path_prefix
       options[:path_prefix] || OmniAuth.config.path_prefix
     end
+
+    def consumer_pattern
+      Regexp.new options[:consumer_pattern] || '[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}'
+    end
+
+    def consumer_id
+      if( matches = consumer_pattern.match(current_path)) 
+        matches[0]
+      else
+        ""
+      end
+    end
     
     def request_path
-      options[:request_path] || "#{path_prefix}/#{name}"
+      Regexp.new options[:request_path] || "^#{path_prefix}/#{consumer_pattern}/#{name}$"
     end
     
     def callback_path
-      options[:callback_path] || "#{path_prefix}/#{name}/callback"
+      Regexp.new options[:callback_path] || "^#{path_prefix}/#{consumer_pattern}/#{name}/callback$"
     end
 
     def setup_path
-      options[:setup_path] || "#{path_prefix}/#{name}/setup"
+      Regexp.new options[:setup_path] || "^#{path_prefix}/#{consumer_pattern}/#{name}/setup$"
     end
 
     def current_path
@@ -148,7 +160,11 @@ module OmniAuth
     end
     
     def callback_url
-      full_host + callback_path + query_string
+      if options[:callback_path]
+        full_host + options[:callback_path] + query_string
+      else
+        full_host + path_prefix + '/' + consumer_id + '/' + name.to_s + '/callback' + query_string
+      end
     end
     
     def session
