@@ -6,14 +6,14 @@ describe "OmniAuth::Strategies::OAuth2" do
   def app
     store = double()
     store.stub(:key) do |arg|
-      if arg == :thingone
+      if arg == "thisisan-exam-ple0-uuid-fortesting00"
         "abc"
       else
         "someotherthingy"
       end
     end
     store.stub(:secret) do |arg|
-      if arg == :thingone
+      if arg == "thisisan-exam-ple0-uuid-fortesting00"
         "def"
       else
         "someotherthingy"
@@ -42,7 +42,7 @@ describe "OmniAuth::Strategies::OAuth2" do
   describe '/auth/{name}' do
 
     before do
-      get '/auth/example.org'
+      get '/auth/thisisan-exam-ple0-uuid-fortesting00/example.org'
     end
 
     it 'should redirect' do

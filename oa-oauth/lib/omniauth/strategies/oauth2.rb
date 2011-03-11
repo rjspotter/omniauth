@@ -55,15 +55,6 @@ module OmniAuth
         consumer_store.secret(id)
       end
 
-      def consumer_id
-        cid = request.query_string.split('=')[1]
-        cid.nil? ? cid : cid.to_sym
-      end
-
-      def callback_url
-        full_host + callback_path
-      end
-
       protected
         
       def request_phase
