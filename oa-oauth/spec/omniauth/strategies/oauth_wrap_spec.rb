@@ -3,10 +3,25 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 describe "OmniAuth::Strategies::OAuthWrap" do
   
   def app
+    store = double()
+    store.stub(:key) do |arg|
+      if arg == "thisisan-exam-ple0-uuid-fortesting00"
+        "abc"
+      else
+        "someotherthingy"
+      end
+    end
+    store.stub(:secret) do |arg|
+      if arg == "thisisan-exam-ple0-uuid-fortesting00"
+        "def"
+      else
+        "someotherthingy"
+      end
+    end
     Rack::Builder.new {
       use OmniAuth::Test::PhonySession
       use OmniAuth::Builder do
-        provider OmniAuth::Strategies::OAuthWrap, 'example.org', 'abc', 'def', {
+        provider OmniAuth::Strategies::OAuthWrap, 'example.org', store, {
           :site              => 'https://api.example.org',
           :verify_path       => '/oauth/wrap.ext',
           :access_token_path => '/oauth/access_token.ext'
@@ -20,34 +35,29 @@ describe "OmniAuth::Strategies::OAuthWrap" do
     last_request.env['rack.session']
   end
   
-  # before do
-  #   stub_request(:post, 'https://api.example.org/oauth/request_token').
-  #     to_return(:body => "oauth_token=yourtoken&oauth_token_secret=yoursecret&oauth_callback_confirmed=true")
-  # end
-  
-  describe '/auth/{name}' do
+  describe '/auth/thisisan-exam-ple0-uuid-fortesting00/{name}' do
     before do
-      get '/auth/example.org'
+      get '/auth/thisisan-exam-ple0-uuid-fortesting00/example.org'
     end
 
     it 'should redirect to authorize_url' do
       last_response.should be_redirect
       last_response.headers['Location'].should == 
-        'https://api.example.org/oauth/wrap.ext?wrap_client_id=abc&wrap_callback=http://example.org/auth/example.org/callback'
+        'https://api.example.org/oauth/wrap.ext?wrap_client_id=abc&wrap_callback=http://example.org/auth/thisisan-exam-ple0-uuid-fortesting00/example.org/callback'
     end
   
     # it 'should set appropriate session variables' do
     # end
   end
   
-  describe '/auth/{name}/callback' do
+  describe '/auth/thisisan-exam-ple0-uuid-fortesting00/{name}/callback' do
     before do
       stub_request(:post, 'https://api.example.org/oauth/access_token.ext').
       to_return(:body => "wrap_access_token=asdf&wrap_access_token_expires_in=60&wrap_refresh_token=qwerty&uid=madhatter")
       # WebMock.after_request do |request_signature, response|
       #   puts "Request #{request_signature} was made and #{response} was returned"
       # end
-      get '/auth/example.org/callback?wrap_verification_code=placeholder'
+      get '/auth/thisisan-exam-ple0-uuid-fortesting00/example.org/callback?wrap_verification_code=placeholder'
     end
 
     it 'should call access_token url' do

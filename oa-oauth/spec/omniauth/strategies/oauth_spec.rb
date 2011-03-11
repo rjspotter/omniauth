@@ -5,14 +5,14 @@ describe "OmniAuth::Strategies::OAuth" do
   def app
     store = double()
     store.stub(:key) do |arg|
-      if arg == :thingone
+      if arg == "thisisan-exam-ple0-uuid-fortesting00"
         "abc"
       else
         "someotherthingy"
       end
     end
     store.stub(:secret) do |arg|
-      if arg == :thingone
+      if arg == "thisisan-exam-ple0-uuid-fortesting00"
         "def"
       else
         "someotherthingy"
@@ -38,9 +38,9 @@ describe "OmniAuth::Strategies::OAuth" do
     
   end
 
-  describe '/auth/{name}' do
+  describe '/auth/thisisan-exam-ple0-uuid-fortesting99/{name}' do
     before do
-      get '/auth/example.org'
+      get '/auth/thisisan-exam-ple0-uuid-fortesting99/example.org'
     end
 
     it 'should send a request for a request_token' do
@@ -66,22 +66,22 @@ describe "OmniAuth::Strategies::OAuth" do
     end
   end
 
-  describe '/auth/{name}?consumer=thingone' do
+  describe '/auth/thisisan-exam-ple0-uuid-fortesting00/{name}' do
   
     it 'should send the right api key' do
-      get '/auth/example.org?consumer=thingone'
+      get '/auth/thisisan-exam-ple0-uuid-fortesting00/example.org'
       WebMock.should have_requested(:post, 'https://api.example.org/oauth/request_token').
         with(:headers => {'Authorization' => /abc/})
     end
 
   end
 
-  describe '/auth/{name}/callback' do
+  describe '/auth/thisisan-exam-ple0-uuid-fortesting99/{name}/callback' do
     before do
       stub_request(:post, 'https://api.example.org/oauth/access_token').
          with(:headers => {'Authorization' => /someotherthing/}).
          to_return(:body => "oauth_token=yourtoken&oauth_token_secret=yoursecret")
-      get '/auth/example.org/callback', {:oauth_verifier => 'dudeman'}, {'rack.session' => {
+      get '/auth/thisisan-exam-ple0-uuid-fortesting99/example.org/callback', {:oauth_verifier => 'dudeman'}, {'rack.session' => {
           'oauth' => {
             "example.org" => {
               'callback_confirmed' => true, 
@@ -103,7 +103,7 @@ describe "OmniAuth::Strategies::OAuth" do
       before do
         stub_request(:post, 'https://api.example.org/oauth/access_token').
            to_raise(::Net::HTTPFatalError.new(%Q{502 "Bad Gateway"}, nil))
-        get '/auth/example.org/callback', {:oauth_verifier => 'dudeman'}, {'rack.session' => {
+        get '/auth/thisisan-exam-ple0-uuid-fortesting99/example.org/callback', {:oauth_verifier => 'dudeman'}, {'rack.session' => {
             'oauth' => {
               "example.org" => {
                 'callback_confirmed' => true, 

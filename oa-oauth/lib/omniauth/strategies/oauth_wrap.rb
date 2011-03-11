@@ -12,23 +12,31 @@ module OmniAuth
       # :verify_path => 'path to redirect to'
       # :access_token_path => 'the access token path'
       #
-      def initialize(app, name, consumer_id, shared_secret, options = {})
-        self.consumer_id, self.consumer_secret, self.consumer_options = consumer_id, shared_secret, options
+      def initialize(app, name, consumer_store = nil, options = {})
+        self.consumer_store, self.consumer_options = consumer_store, options
         super
       end
 
-      attr_accessor :consumer_id, :consumer_secret, :consumer_options
+      attr_accessor :consumer_store, :consumer_options
+
+      def consumer_key(id)
+        consumer_store.key(id)
+      end
+
+      def consumer_secret(id)
+        consumer_store.secret(id)
+      end
     
       def request_phase
         r = Rack::Response.new
-        r.redirect "#{URI.join(consumer_options[:site], consumer_options[:verify_path])}?wrap_client_id=#{consumer_id}&wrap_callback=#{callback_url}"
+        r.redirect "#{URI.join(consumer_options[:site], consumer_options[:verify_path])}?wrap_client_id=#{consumer_key(consumer_id)}&wrap_callback=#{callback_url}"
         r.finish
       end
     
       def callback_phase
         Rack::Client.new(consumer_options[:site]).post(consumer_options[:access_token_path], {
-                            'wrap_client_id'         => consumer_id,
-                            'wrap_client_secret'     => consumer_secret,
+                            'wrap_client_id'         => consumer_key(consumer_id),
+                            'wrap_client_secret'     => consumer_secret(consumer_id),
                             'wrap_verification_code' => http_parameters['wrap_verification_code'],
                             'wrap_callback'          => callback_url
                           }).body.each do |res|

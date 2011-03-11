@@ -28,11 +28,6 @@ module OmniAuth
         consumer_store.secret(id)
       end
 
-      def consumer_id
-        cid = request.query_string.split('=')[1]
-        cid.nil? ? cid : cid.to_sym
-      end
-
       attr_reader :name
       attr_accessor :consumer_store, :consumer_options
 
