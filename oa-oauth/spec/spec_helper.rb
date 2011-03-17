@@ -8,6 +8,7 @@ require 'rack/test'
 require 'omniauth/core'
 require 'omniauth/test'
 require 'omniauth/oauth'
+require 'omniauth/store'
 
 Dir[File.dirname(__FILE__) + "/support/**/*.rb"].each {|f| require f}
 
