@@ -1,0 +1,1 @@
+Store your API keys and secrets somewhere else than config.ru

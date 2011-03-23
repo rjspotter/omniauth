@@ -11,7 +11,7 @@ Gem::Specification.new do |gem|
   
   gem.files = Dir.glob("{lib}/**/*") + %w(README.rdoc LICENSE)
   
-  %w(oa-core oa-oauth oa-basic oa-openid oa-enterprise oa-more).each do |subgem|
+  %w(oa-core oa-oauth oa-basic oa-openid oa-enterprise oa-more oa-store).each do |subgem|
     gem.add_dependency subgem, version
   end
 
