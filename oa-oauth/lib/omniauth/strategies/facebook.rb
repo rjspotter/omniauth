@@ -8,23 +8,17 @@ module OmniAuth
     # basic user information.
     #
     # @example Basic Usage
-    #   use OmniAuth::Strategies::Facebook, 'client_id', 'client_secret'
+    #   use OmniAuth::Strategies::Facebook, Storage
     class Facebook < OAuth2
       # @param [Rack Application] app standard middleware application parameter
-      # @param [String] client_id the application id as [registered on Facebook](http://www.facebook.com/developers/)
-      # @param [String] client_secret the application secret as registered on Facebook
       # @option options [String] :scope ('email,offline_access') comma-separated extended permissions such as `email` and `manage_pages`
       def initialize(app, consumer_store = nil, options = {}, &block)
+        options[:scope] ||= "email,user_birthday"
         super(app, :facebook, consumer_store, {:site => 'https://graph.facebook.com/'}, options, &block)
       end
       
       def user_data
         @data ||= MultiJson.decode(@access_token.get('/me', {}, { "Accept-Language" => "en-us,en;"}))
-      end
-      
-      def request_phase(options = {})
-        options[:scope] ||= "email,offline_access,user_birthday"
-        super(options)
       end
       
       def user_info
@@ -33,8 +27,7 @@ module OmniAuth
           'first_name' => user_data["first_name"],
           'last_name'  => user_data["last_name"],
           'gender'     => user_data['gender'].to_s.first.upcase,
-#           'dob'        => user_data['birthday_date'],
-          'dob'        => user_data['birthday'] ? Chronic.parse(user_data['birthday']).strftime("%Y-%m-%d") : nil,
+          'dob'        => user_data['birthday_date'],
           'timezone'   => user_data['timezone'],
           'language'   => user_data['locale'],
           'email'      => user_data['email'],
