@@ -80,8 +80,12 @@ module OmniAuth
         end
         
         super
-      rescue ::OAuth2::HTTPError, ::OAuth2::AccessDenied, CallbackError => e
+      rescue CallbackError => e
         fail!(:invalid_credentials, e)
+      rescue ::OAuth2::HTTPError => e
+        fail!(:http_error, e)
+      rescue ::OAuth2::AccessDenied
+        fail!(:access_denied)
       rescue ::MultiJson::DecodeError => e
         fail!(:invalid_response, e)
       end
