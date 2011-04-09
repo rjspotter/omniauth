@@ -5,6 +5,7 @@ module OmniAuth
     autoload :OAuth,              'omniauth/strategies/oauth'
     autoload :OAuthWrap,          'omniauth/strategies/oauth_wrap'
     autoload :OAuth2,             'omniauth/strategies/oauth2'
+    autoload :XAuth,              'omniauth/strategies/xauth'
 
     autoload :Myspace,            'omniauth/strategies/myspace'
     autoload :Windows,            'omniauth/strategies/windows'
@@ -20,6 +21,7 @@ module OmniAuth
     autoload :TripIt,             'omniauth/strategies/trip_it'
     autoload :Dopplr,             'omniauth/strategies/dopplr'
     autoload :Meetup,             'omniauth/strategies/meetup'
+    autoload :Salesforce,         'omniauth/strategies/salesforce'
     autoload :SoundCloud,         'omniauth/strategies/sound_cloud'
     autoload :SmugMug,            'omniauth/strategies/smug_mug'
     autoload :Goodreads,          'omniauth/strategies/goodreads'
@@ -31,5 +33,14 @@ module OmniAuth
     autoload :YouTube,            'omniauth/strategies/you_tube'
     autoload :Hyves,              'omniauth/strategies/hyves'
     autoload :Miso,               'omniauth/strategies/miso'
+    autoload :Dailymile,          'omniauth/strategies/dailymile'
+    autoload :Instagram,          'omniauth/strategies/instagram'
+    autoload :Mixi,               'omniauth/strategies/mixi'
+    autoload :Evernote,           'omniauth/strategies/evernote'
+    autoload :Doit,               'omniauth/strategies/doit'
+    autoload :Instapaper,         'omniauth/strategies/instapaper'
+    autoload :TradeMe,            'omniauth/strategies/trade_me'
+    autoload :Teambox,            'omniauth/strategies/teambox'
+    autoload :Tumblr,             'omniauth/strategies/tumblr'
   end
 end

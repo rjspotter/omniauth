@@ -4,6 +4,7 @@ gem 'oa-core',  :path => File.expand_path('../../oa-core/', __FILE__)
 
 # Will automatically pull in this gem and all its
 # dependencies specified in the gemspec
+gem 'oa-store', :path => File.expand_path("../../oa-store", __FILE__)
 gem 'oa-oauth', :path => File.expand_path("..", __FILE__)
 gem 'rack-client'
 

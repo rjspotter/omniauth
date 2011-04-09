@@ -9,15 +9,19 @@ if Object.const_defined?(:Bundler) && Bundler.const_defined?(:Dsl) && self.kind_
     gem 'rake'
     gem 'mg',        '~> 0.0.8'
     gem 'rspec',     '~> 2.5.0'
-    gem 'webmock',   '~> 1.3.4'
+    gem 'webmock',   '~> 1.6.2'
     gem 'rack-test', '~> 0.5.4'
-    gem 'json',      '~> 1.4.3' # multi_json implementation
-  end  
+    gem 'json_pure', '~> 1.5.1' # multi_json implementation
+    gem 'evernote',  '~> 0.9.0' unless RUBY_PLATFORM == 'java'
+    gem 'jruby-openssl', '~> 0.7.2' if RUBY_PLATFORM == 'java'
+  end
 else #gemspec
   gem.add_development_dependency  'rake'
   gem.add_development_dependency  'mg',         '~> 0.0.8'
   gem.add_development_dependency  'rspec',      '~> 1.3.0'
   gem.add_development_dependency  'webmock',    '~> 1.3.4'
   gem.add_development_dependency  'rack-test',  '~> 0.5.4'
-  gem.add_development_dependency  'json',       '~> 1.4.3' # multi_json implementation
+  gem.add_development_dependency  'json_pure',  '~> 1.5.1' # multi_json implementation
+  gem.add_development_dependency  'evernote',   '~> 0.9.0' unless RUBY_PLATFORM == 'java'
+  gem.add_runtime_dependency('jruby-openssl', '~> 0.7.2') if RUBY_PLATFORM == 'java'
 end

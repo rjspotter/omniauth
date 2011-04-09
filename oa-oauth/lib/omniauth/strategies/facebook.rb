@@ -1,6 +1,5 @@
 require 'omniauth/oauth'
 require 'multi_json'
-require 'chronic'
 
 module OmniAuth
   module Strategies
@@ -40,7 +39,7 @@ module OmniAuth
         else
           nil
         end
-      end
+      end      
 
       def user_info
         {

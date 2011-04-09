@@ -15,10 +15,13 @@ To install OmniAuth, simply install the gem:
 
 OmniAuth currently supports the following external providers:
 
-* via OAuth
+* via OAuth (OAuth 1.0, OAuth 2, and xAuth)
   * 37signals ID
   * Bit.ly (credit: [philnash](https://github.com/philnash))
+  * DailyMile (credit: [cdmwebs](https://github.com/cdmwebs))
+  * Doit.im (credit: [chouti](https://github.com/chouti))
   * Dopplr (credit: [flextrip](https://github.com/flextrip))
+  * Evernote (credit: [szimek](https://github.com/szimek))
   * Facebook
   * Foursquare
   * GitHub
@@ -26,22 +29,39 @@ OmniAuth currently supports the following external providers:
   * Gowalla (credit: [kvnsmth](https://github.com/kvnsmth))
   * Hyves (credit: [mrdg](https://github.com/mrdg))
   * Identi.ca (credit: [dcu](https://github.com/dcu))
+  * Instagram (credit: [kiyoshi](https://github.com/kiyoshi))
+  * Instapaper (credit: [micpringle](https://github.com/micpringle))
   * LinkedIn
   * Meetup (credit [coderoshi](https://github.com/coderoshi))
+  * Miso (credit: [rickenharp](https://github.com/rickenharp))
+  * Mixi (credit: [kiyoshi](https://github.com/kiyoshi))
   * Netflix (credit: [caged](https://github.com/caged))
+  * Salesforce (via [CloudSpokes](http://www.cloudspokes.com))
   * SmugMug (credit: [pchilton](https://github.com/pchilton))
   * SoundCloud (credit: [leemartin](https://github.com/leemartin))
+  * TeamBox (credit [jrom](https://github.com/jrom))
+  * TradeMe (credit: [pchilton](https://github.com/pchilton))
   * TripIt (credit: [flextrip](https://github.com/flextrip))
+  * Tumblr (credit: [jamiew](https://github.com/jamiew))
   * Twitter
   * Vimeo (credit: [jamiew](https://github.com/jamiew))
   * YouTube (credit: [jamiew](https://github.com/jamiew))
-  * Miso (credit: [rickenharp](https://github.com/rickenharp))
-* Flickr (credit: [pchilton](https://github.com/pchilton))
 * OpenID
 * Google Apps (via OpenID)
 * CAS (Central Authentication Service) (credit: [jamesarosen](https://github.com/jamesarosen))
 * LDAP (credit: [pyu10055](https://github.com/pyu10055))
+* Flickr (credit: [pchilton](https://github.com/pchilton))
 
+## Compatibility
+
+OmniAuth is tested against the following Ruby versions:
+
+* 1.8.7
+* 1.9.1
+* 1.9.2
+* jRuby (note, the Evernote strategy is not available for jRuby)
+* Rubinius
+* REE
 
 ## Usage
 
@@ -74,6 +94,7 @@ The `user_info` hash will automatically be populated with as much information ab
 
 The best place to find more information is the [OmniAuth Wiki](http://github.com/intridea/omniauth/wiki). Some specific information you might be interested in:
 
+* [CI Build Status](http://travis-ci.org/#!/intridea/omniauth)
 * [Roadmap](http://github.com/intridea/omniauth/wiki/Roadmap)
 * [Changelog](http://github.com/intridea/omniauth/wiki/Changelog)
 * [Report Issues](http://github.com/intridea/omniauth/issues)

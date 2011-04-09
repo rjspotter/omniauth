@@ -20,7 +20,10 @@ module OmniAuth
           :site => 'https://api.twitter.com',
           :authorize_path => options[:sign_in] == false ? '/oauth/authorize' : '/oauth/authenticate'
         }
-        super(app, :twitter, consumer_store, client_options, options)
+        
+        options[:authorize_params] = {:force_login => 'true'} if options.delete(:force_login) == true
+        client_options[:authorize_path] = '/oauth/authenticate' unless options[:sign_in] == false
+		super(app, :twitter, consumer_store, client_options, options)
       end
       
       def auth_hash

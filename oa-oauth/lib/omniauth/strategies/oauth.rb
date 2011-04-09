@@ -1,3 +1,4 @@
+require 'multi_json'
 require 'oauth'
 require 'omniauth/oauth'
 require 'multi_json'
@@ -11,13 +12,19 @@ module OmniAuth
         self.consumer_store = consumer_store
         self.consumer_options = consumer_options.merge(options[:client_options] || options[:consumer_options] || {})
         super
+        self.options[:open_timeout] ||= 30
+        self.options[:read_timeout] ||= 30
+        self.options[:authorize_params] = options[:authorize_params] || {}
       end
 
       def consumer(id)
-        ::OAuth::Consumer.new(
+        consumer = ::OAuth::Consumer.new(
                               consumer_key(id), 
                               consumer_secret(id), 
                               consumer_options)
+		consumer.http.open_timeout = options[:open_timeout] if options[:open_timeout]
+        consumer.http.read_timeout = options[:read_timeout] if options[:read_timeout]
+        consumer
       end
 
       def consumer_key(id)
@@ -37,12 +44,14 @@ module OmniAuth
         r = Rack::Response.new
 
         if request_token.callback_confirmed?
-          r.redirect(request_token.authorize_url)
+          r.redirect(request_token.authorize_url(options[:authorize_params]))
         else
-          r.redirect(request_token.authorize_url(:oauth_callback => callback_url))
+          r.redirect(request_token.authorize_url(options[:authorize_params].merge(:oauth_callback => callback_url)))
         end
 
         r.finish
+      rescue ::Timeout::Error => e
+        fail!(:timeout, e)
       end
 
       def callback_phase
@@ -57,6 +66,8 @@ module OmniAuth
 
         @access_token = request_token.get_access_token(opts)
         super
+      rescue ::Timeout::Error => e
+        fail!(:timeout, e)
       rescue ::Net::HTTPFatalError => e
         fail!(:service_unavailable, e)
       rescue ::OAuth::Unauthorized => e

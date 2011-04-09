@@ -66,6 +66,8 @@ module OmniAuth
           fail!(mocked_auth)
         else
           @env['omniauth.auth'] = mocked_auth
+          @env['omniauth.origin'] = session.delete('omniauth.origin')
+          @env['omniauth.origin'] = nil if env['omniauth.origin'] == ''
           call_app!
         end
       else
@@ -120,7 +122,7 @@ module OmniAuth
     end
 
     def current_path
-      request.path.downcase.sub(/\/$/,'')
+      request.path_info.downcase.sub(/\/$/,'')
     end
 
     def query_string
@@ -152,13 +154,13 @@ module OmniAuth
         when Proc
           OmniAuth.config.full_host.call(env)
         else
-          uri = URI.parse(request.url)
+          uri = URI.parse(request.url.gsub(/\?.*$/,''))
           uri.path = ''
           uri.query = nil
           uri.to_s
       end
     end
-    
+
     def callback_url
       if options[:callback_path]
         full_host + options[:callback_path] + query_string
@@ -194,7 +196,7 @@ module OmniAuth
       self.env['omniauth.error'] = exception
       self.env['omniauth.error.type'] = message_key.to_sym
       self.env['omniauth.error.strategy'] = self
-      
+
       OmniAuth.config.on_failure.call(self.env)
     end
   end
