@@ -28,14 +28,14 @@ module OmniAuth
         if facebook_session.nil? || facebook_session.empty?
           super
         else
-          @access_token = ::OAuth2::AccessToken.new(client, facebook_session['access_token'])
+          @access_token = ::OAuth2::AccessToken.new(client(consumer_id), facebook_session['access_token'])
         end
       end
 
       def facebook_session
-        session_cookie = request.cookies["fbs_#{client.id}"]
+        session_cookie = request.cookies["fbs_#{client(consumer_id).id}"]
         if session_cookie
-          @facebook_session ||= Rack::Utils.parse_query(request.cookies["fbs_#{client.id}"].gsub('"', ''))
+          @facebook_session ||= Rack::Utils.parse_query(request.cookies["fbs_#{client(consumer_id).id}"].gsub('"', ''))
         else
           nil
         end
