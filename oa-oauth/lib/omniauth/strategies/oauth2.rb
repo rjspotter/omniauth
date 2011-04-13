@@ -91,7 +91,7 @@ module OmniAuth
 
       def build_access_token
         verifier = request.params['code']
-		client(consumer_id).web_server.get_access_token(verifier, {:redirect_uri => callback_url}.merge(options))
+        client(consumer_id).web_server.get_access_token(verifier, {:redirect_uri => callback_url.split('?')[0]}.merge(options))
       end
       
       def auth_hash
