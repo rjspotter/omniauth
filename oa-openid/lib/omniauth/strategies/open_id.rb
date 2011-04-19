@@ -86,6 +86,7 @@ module OmniAuth
         openid.call(env)
         @openid_response = env.delete('rack.openid.response')
         if @openid_response && @openid_response.status == :success
+          puts "Successful callback phase"
           super
         else
           fail!(:invalid_credentials)
