@@ -22,7 +22,8 @@ module OmniAuth
         :city => 'http://axschema.org/contact/city/home',
         :state => 'http://axschema.org/contact/state/home',
         :website => 'http://axschema.org/contact/web/default',
-        :image => 'http://axschema.org/media/image/aspect11'
+        :image => 'http://axschema.org/media/image/aspect11',
+        :gender => 'http://axschema.org/person/gender'
       }
       
       # Initialize the strategy as a Rack Middleware.
