@@ -60,6 +60,14 @@ describe 'As the base class Omniauth::Stores::Base' do
 
     end
 
+    context "so that the developer can have a custom callback" do
+      
+      it "should stub" do
+        expect {@store.callback('identifier')}.to raise_error(NotImplementedError)
+      end
+
+    end
+
     context "so that the developer can access the correct strategy" do
       
       it "should stub" do

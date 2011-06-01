@@ -48,6 +48,7 @@ describe 'OmniAuth::Stores::Redis' do
       @redis.stub(:lindex).with("developerid:implicitstrategy",0).and_return("otherapikey")
       @redis.stub(:lindex).with("developerid:explicitstrategy",1).and_return("thesecret")
       @redis.stub(:lindex).with("developerid:implicitstrategy",1).and_return("othersecret")
+      @redis.stub(:get).with("developerid:mask").and_return("http://example.com/sitepass/")
       @store = OmniAuth::Stores::Redis.new(@redis, "implicitstrategy")
     end
     
@@ -84,6 +85,14 @@ describe 'OmniAuth::Stores::Redis' do
 
       it "should return the api secret for the implicit strategy" do
         @store.secret("developerid").should == "othersecret"
+      end
+
+    end
+
+    context "for all strategies both explicit and implicit" do
+      
+      it "should return the callback" do
+        @store.callback("developerid").should == 'http://example.com/sitepass/'
       end
 
     end

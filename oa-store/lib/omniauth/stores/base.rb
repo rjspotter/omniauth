@@ -13,6 +13,10 @@ module OmniAuth
         raise NotImplementedError        
       end
 
+      def callback(identifier)
+        raise NotImplementedError        
+      end
+
       def strategy
         raise NotImplementedError
       end

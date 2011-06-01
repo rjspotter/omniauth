@@ -18,7 +18,11 @@ module OmniAuth
       def secret(ident, strat = nil)
         strat ||= self.strategy
         self.connection.lindex("#{ident}:#{strat}", 1)
-      end      
+      end
+
+      def callback(ident)
+        self.connection.get("#{ident}:mask")
+      end
 
     end
   end

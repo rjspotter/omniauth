@@ -19,6 +19,13 @@ describe "OmniAuth::Strategies::OAuth2" do
         "someotherthingy"
       end
     end
+    store.stub(:callback) do |arg|
+      if arg == "thisisan-exam-ple0-uuid-fortesting00"
+        "http://user.example.com/sitepass/"
+      else
+        nil
+      end
+    end
     Rack::Builder.new {
       use OmniAuth::Test::PhonySession
       use OmniAuth::Builder do

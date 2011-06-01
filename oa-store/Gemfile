@@ -8,3 +8,7 @@ gem 'oa-store', :path => File.expand_path("..", __FILE__)
 gem 'rack-client'
 
 eval File.read(File.join(File.dirname(__FILE__), '../development_dependencies.rb'))
+
+group :test do
+  gem 'ZenTest'
+end

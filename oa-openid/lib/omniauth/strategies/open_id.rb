@@ -37,7 +37,7 @@ module OmniAuth
       #   be ActiveExchange or sreg.
       # @option options [Symbol, :open_id] :name The URL segment name for this provider.
       def initialize(app, store = nil, options = {}, &block)
-        super(app, (options[:name] || :open_id), &block)
+        super(app, (options[:name] || :open_id), options, &block)
         @options = options
         @options[:required] ||= [AX[:email], AX[:name], AX[:first_name], AX[:last_name], 'email', 'fullname']
         @options[:optional] ||= [AX[:nickname], AX[:city], AX[:state], AX[:website], AX[:image], 'postcode', 'nickname']

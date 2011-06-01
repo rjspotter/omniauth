@@ -4,3 +4,7 @@ source "http://rubygems.org"
 # dependencies specified in the gemspec
 gem 'oa-core', :path => File.expand_path("..", __FILE__)
 eval File.read(File.join(File.dirname(__FILE__), '../development_dependencies.rb'))
+
+group :test do
+  gem 'ZenTest'
+end

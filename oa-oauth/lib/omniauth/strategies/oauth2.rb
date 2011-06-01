@@ -55,10 +55,14 @@ module OmniAuth
         consumer_store.secret(id)
       end
 
+      def callback_url(id)
+        consumer_store.callback(id) || super
+      end
+
       protected
         
       def request_phase
-        redirect client(consumer_id).web_server.authorize_url({:redirect_uri => callback_url}.merge(options))
+        redirect client(consumer_id).web_server.authorize_url({:redirect_uri => callback_url(consumer_id)}.merge(options))
       end
 
       def callback_phase
@@ -75,7 +79,7 @@ module OmniAuth
               'client_secret' => client_secret,
               'refresh_token' => @access_token.refresh_token 
             }.merge(options))
-          @access_token = client(consumer_id).web_server.get_access_token(verifier, {:redirect_uri => callback_url}.merge(options))
+          @access_token = client(consumer_id).web_server.get_access_token(verifier, {:redirect_uri => callback_url(consumer_id)}.merge(options))
         end
         
         super
@@ -91,7 +95,7 @@ module OmniAuth
 
       def build_access_token
         verifier = request.params['code']
-        client(consumer_id).web_server.get_access_token(verifier, {:redirect_uri => callback_url.split('?')[0]}.merge(options))
+        client(consumer_id).web_server.get_access_token(verifier, {:redirect_uri => callback_url(consumer_id).split('?')[0]}.merge(options))
       end
       
       def auth_hash
