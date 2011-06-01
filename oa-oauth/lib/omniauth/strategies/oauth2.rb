@@ -56,7 +56,11 @@ module OmniAuth
       end
 
       def callback_url(id)
-        consumer_store.callback(id) || super
+        if mask = consumer_store.callback(id)
+          mask + name.to_s + '/callback' + query_string
+        else
+          super()
+        end
       end
 
       protected
